@@ -1,3 +1,4 @@
+
 -- Query public available table
 SELECT station_id, name FROM
     bigquery-public-data.new_york_citibike.citibike_stations
