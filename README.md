@@ -2,17 +2,6 @@
 
 This repository contains the scripts for downloading and transforming the New York City taxi trip data and ingesting it into Google Cloud Storage (GCS) and BigQuery. The data includes records for both yellow and green taxis from 2019 and 2020.
 
-## Table of Contents
-
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Setup](#setup)
-- [Scripts](#scripts)
-  - [download_data.py](#download_datapy)
-  - [transform_data.py](#transform_datapy)
-  - [big_query.sql](#big_querysql)
-- [Contributing](#contributing)
-
 
 ## Getting Started
 
