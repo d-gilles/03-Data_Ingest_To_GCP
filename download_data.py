@@ -5,7 +5,7 @@ from google.cloud import storage
 import datetime
 from tqdm import tqdm
 import math
-import io
+from upload_in_chunks import upload_blob_in_chunks_from_buffer
 
 now = datetime.datetime.now()
 
@@ -28,23 +28,6 @@ bucket = storage_client.get_bucket(bucket_name)
 
 # Base URL for the Parquet files
 url_base = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year}-"
-
-
-def upload_blob_in_chunks_from_buffer(bucket_name, destination_blob_name, buffer, chunk_size):
-    """Uploads a buffer to the bucket in chunks."""
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(destination_blob_name)
-
-    # Konfigurieren des chunk_size. Needs to be a multiple of 256 KB
-    blob.chunk_size = chunk_size * 1024 * 256  # Setzen Sie hier die Chunk-Größe in KB
-
-    # Upload the buffer in chunks
-    with io.BufferedReader(buffer) as reader:
-        blob.upload_from_file(reader)
-
-    print(f"Uploaded buffer to {bucket_name}/{destination_blob_name} in chunks.")
-
 
 # Iterate over the months of the year
 for month in range(1, 13):

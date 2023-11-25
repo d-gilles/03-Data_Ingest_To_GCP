@@ -4,9 +4,7 @@ import pandas as pd
 from google.cloud import storage
 from io import BytesIO
 import argparse
-
-# Set GOOGLE_APPLICATION_CREDENTIALS environment variable
-#os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/david/.google/credentials/google_credentials.json"
+from upload_in_chunks import upload_blob_in_chunks_from_buffer
 
 # GCP bucket name
 bucket_name = "nytaxi_raw"
@@ -109,9 +107,11 @@ for m in range(1, 13):
 
     # Test if dtypes match, if so, save the transformed data to the GCP bucket
     if check_dtypes_match(df, required_columns):
-        upload_buffer = df.to_parquet(None, engine='pyarrow', index=False)
-        blob = bucket.blob(output_fn)
-        blob.upload_from_string(upload_buffer)
+        upload_buffer = BytesIO()
+        df.to_parquet(upload_buffer, engine='pyarrow', index=False)
+        upload_buffer.seek(0)
+        upload_blob_in_chunks_from_buffer(bucket_name, output_fn, upload_buffer, chunk_size=8)
+
         if verbose:
             print(f"Uploaded {output_fn} to GCP bucket")
 
